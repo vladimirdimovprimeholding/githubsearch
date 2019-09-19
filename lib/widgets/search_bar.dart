@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SearchBar extends StatelessWidget {
+  final searchController;
 
-  SearchBar({this.textChangeHandler});
+  final textChangedSubject;
 
-  final Function textChangeHandler;
+  SearchBar({this.searchController, this.textChangedSubject});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: TextField(
-        decoration: InputDecoration(hintText: "Repository search"),
-        onChanged: textChangeHandler,
+      padding: EdgeInsets.all(10),
+      color: Colors.grey[350],
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: TextField(
+            controller: searchController,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey[400],
+              ),
+              suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.cancel,
+                    color: Colors.grey[400],
+                  ),
+                  onPressed: () {
+                    //the code below handle some weird exception
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => searchController.clear());
+                  }),
+              hintText: "Repository search",
+              border: InputBorder.none,
+            ),
+            onChanged: textChangedSubject.add),
       ),
     );
   }
-
-
 }
